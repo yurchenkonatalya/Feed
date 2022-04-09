@@ -3,4 +3,5 @@
     <string name="satiety">Satiety: </string>
     <string name="button_feed">Feed</string>
     <string name="feedthecat">FeedTheCat</string>
+    <string name="input">Input</string>
 </resources>

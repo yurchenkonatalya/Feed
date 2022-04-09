@@ -15,7 +15,7 @@ class First: AppCompatActivity() {
         buttonLog = findViewById(R.id.buttonLog)
     }
     fun change(view: View){
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, Login::class.java)
         startActivity(intent)
     }
 

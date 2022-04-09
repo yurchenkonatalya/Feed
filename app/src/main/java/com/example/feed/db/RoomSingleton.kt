@@ -5,9 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = arrayOf(RoomEntity::class), version = 1)
+@Database(entities = arrayOf(RoomEntity::class,RoomOwner::class), version = 1)
 abstract class RoomSingleton : RoomDatabase() {
     abstract fun roomDao():roomDao
+    abstract fun roomOwnerDao():roomOwnerDao
 
     companion object {
         private var INSTANCE: RoomSingleton? = null

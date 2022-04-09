@@ -17,6 +17,7 @@ class Table : AppCompatActivity() {
     lateinit var row: TableRow
     lateinit var date: TextView
     lateinit var amount: TextView
+    private var id: Long = -1
     private lateinit var mDb: RoomSingleton
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,11 +26,12 @@ class Table : AppCompatActivity() {
 
         mDb = RoomSingleton.getInstance(applicationContext)
 
+        id = intent.getLongExtra(Login.USER_ID_ARG, -1)
 
         tableLayout = findViewById(R.id.table)
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val list = mDb.roomDao().allComponents()
+            val list = mDb.roomDao().allComponents(id)
             withContext(Dispatchers.Main) {
                 for (item in list) {
                     row = TableRow(this@Table)
@@ -46,7 +48,5 @@ class Table : AppCompatActivity() {
                 }
             }
         }
-
-
     }
 }

@@ -1,5 +1,6 @@
 package com.example.feed
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.Intent.ACTION_SEND
 import android.os.Bundle
@@ -23,13 +24,13 @@ class MainActivity : AppCompatActivity() {
     private var amountTaps = 0
     private lateinit var textView: TextView
     private lateinit var image: ImageView
-    private lateinit var mDb:RoomSingleton
+    private lateinit var mDb: RoomSingleton
     private lateinit var shareButton: ImageView
-
+    private var id: Long = -1
     lateinit var xAnimation: SpringAnimation
     lateinit var yAnimation: SpringAnimation
 
-    private companion object  {
+    private companion object {
         val STIFFNESS = SpringForce.STIFFNESS_MEDIUM
         val DAMPING_RATIO = SpringForce.DAMPING_RATIO_HIGH_BOUNCY
     }
@@ -37,10 +38,12 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        shareButton= findViewById(R.id.share)
-        shareButton.setOnClickListener{
-           val intent= Intent(ACTION_SEND)
-            intent.apply{
+        id = intent.getLongExtra(Login.USER_ID_ARG, -1)
+        println("$id")
+        shareButton = findViewById(R.id.share)
+        shareButton.setOnClickListener {
+            val intent = Intent(ACTION_SEND)
+            intent.apply {
                 setType("text/plane")
 //                putExtra(Intent.EXTRA_SUBJECT, "qqq")
                 putExtra(Intent.EXTRA_TEXT, "Satety: $amountTaps")
@@ -54,12 +57,15 @@ class MainActivity : AppCompatActivity() {
 
         textView = findViewById(R.id.textView_number_taps)
         image = findViewById(R.id.imageViewCat)
-        image.viewTreeObserver.addOnGlobalLayoutListener(object: ViewTreeObserver.OnGlobalLayoutListener {
+        image.viewTreeObserver.addOnGlobalLayoutListener(object :
+            ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 xAnimation = createSpringAnimation(
-                    image, SpringAnimation.X, image.x, STIFFNESS, DAMPING_RATIO)
+                    image, SpringAnimation.X, image.x, STIFFNESS, DAMPING_RATIO
+                )
                 yAnimation = createSpringAnimation(
-                    image, SpringAnimation.Y, image.y, STIFFNESS, DAMPING_RATIO)
+                    image, SpringAnimation.Y, image.y, STIFFNESS, DAMPING_RATIO
+                )
                 image.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
@@ -72,35 +78,42 @@ class MainActivity : AppCompatActivity() {
 
         when (amountTaps % 15) {
             0 -> {
-                var dX = 100f
+                val dX = 100f
                 image.animate().x(dX).setDuration(0).start()
                 xAnimation.start()
             }
         }
     }
 
-    fun saveResult(view: View){
-        val format: SimpleDateFormat = SimpleDateFormat("dd.mm.yyyy, hh:mm:ss")
+    @SuppressLint("SimpleDateFormat")
+    fun saveResult(view: View) {
+        val format = SimpleDateFormat("dd.MM.yyyy, hh:mm:ss")
+        println("start")
         val roomEntity = RoomEntity(
+            id_owner = id,
             date = format.format(Calendar.getInstance().getTime()),
             amount = amountTaps
         )
-        lifecycleScope.launch(Dispatchers.IO){
+        println("end")
+        lifecycleScope.launch(Dispatchers.IO) {
             mDb.roomDao().insert(roomEntity)
             println("1")
         }
     }
 
-    fun goTable(view: View){
+    fun goTable(view: View) {
         val intent = Intent(this, Table::class.java)
+        intent.putExtra(Login.USER_ID_ARG, id)
         startActivity(intent)
     }
 
-    fun createSpringAnimation(view: View,
-                              property: DynamicAnimation.ViewProperty,
-                              finalPosition: Float,
-                              stiffness: Float,
-                              dampingRatio: Float): SpringAnimation {
+    fun createSpringAnimation(
+        view: View,
+        property: DynamicAnimation.ViewProperty,
+        finalPosition: Float,
+        stiffness: Float,
+        dampingRatio: Float
+    ): SpringAnimation {
         val animation = SpringAnimation(view, property)
         val spring = SpringForce(finalPosition)
         spring.stiffness = stiffness
