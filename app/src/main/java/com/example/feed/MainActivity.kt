@@ -121,4 +121,5 @@ class MainActivity : AppCompatActivity() {
         animation.spring = spring
         return animation
     }
+
 }

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.feed">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -10,43 +11,47 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Feed">
+        <receiver android:name=".ResultWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
 
-        <activity
-            android:exported="true"
-            android:name=".MainActivity">
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/result_widget_info" />
+        </receiver>
+
+        <activity android:name=".ResultWidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
         </activity>
-
+        <activity
+            android:name=".MainActivity"
+            android:exported="true" />
         <activity
             android:name=".Login"
-            android:exported="true">
-        </activity>
-
+            android:exported="true" />
         <activity
-            android:launchMode="singleTop"
+            android:name=".Inform"
             android:exported="true"
-            android:name=".Inform">
-        </activity>
-
+            android:launchMode="singleTop" />
         <activity
-            android:exported="true"
-            android:name=".First">
-        </activity>
-
+            android:name=".First"
+            android:exported="true" />
         <activity
-            android:exported="true"
-            android:name=".Table">
-        </activity>
-
+            android:name=".Table"
+            android:exported="true" />
         <activity
             android:name=".SplashScreen"
             android:exported="true"
             android:theme="@style/SplashTheme">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
     </application>
+
 </manifest>

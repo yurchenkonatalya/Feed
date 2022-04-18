@@ -47,7 +47,7 @@ class Login : AppCompatActivity() {
 
         signInButton.setOnClickListener {
             signIn()
-
+            signOut()
 
         }
 
@@ -121,5 +121,11 @@ class Login : AppCompatActivity() {
                 finish()
             }
         }
+    }
+    private fun signOut() {
+        mGoogleSignInClient.signOut()
+//            .addOnCompleteListener(this) {
+//
+//            }
     }
 }
